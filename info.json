@@ -1,0 +1,154 @@
+{
+    "json_version": 2,
+    "products" : [],
+    "identity": {
+        "author": "tikismoke",
+        "author_email": "new.domodroid@gmail.com",
+        "dependencies": [
+            {}
+        ],
+        "description": "ebusd interface",
+        "domogik_min_version": "0.5.0",
+        "name": "ebusd",
+        "type": "plugin",
+        "version": "0.1",
+        "tags": ["ebus", "hvac", "temperature", "heating"]
+    },
+    "configuration": [
+        {
+            "default": "localhost:8888",
+            "description": "ebusd ip:port socket address",
+            "key": "device",
+            "name": "Device",
+            "required": "yes",
+            "type": "string"
+        }
+
+    ],
+    "commands": {
+       "set_level_bin": {
+           "name": "Switch On or Off",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "level",
+                   "data_type": "DT_Switch",
+                   "conversion": ""
+               }
+           ]
+        },
+        "set_level_number": {
+           "name": "Set to a level",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "level",
+                   "data_type": "DT_Number",
+                   "conversion": ""
+               }
+           ]
+        },
+        "set_level_string": {
+           "name": "Set to a level",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "level",
+                   "data_type": "DT_String",
+                   "conversion": ""
+               }
+           ]
+        }
+    },
+    "xpl_commands": {},
+    "sensors": {
+        "level_bin": {
+            "name": "level sensor",
+            "data_type": "DT_Switch",
+            "conversion": "",
+            "incremental": false,
+            "timeout": 0,
+            "history": {
+                "store": true,
+                "duplicate": false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "level_number": {
+            "name": "level sensor",
+            "data_type": "DT_Number",
+            "conversion": "",
+            "incremental": false,
+            "timeout": 0,
+            "history": {
+                "store": true,
+                "duplicate": false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "level_string": {
+            "name": "level sensor",
+            "data_type": "DT_String",
+            "conversion": "",
+            "incremental": false,
+            "timeout": 0,
+            "history": {
+                "store": true,
+                "duplicate": false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        }
+    },
+    "xpl_stats": {},
+    "device_types": {
+        "ebusd.onoff": {
+            "id": "ebusd.onoff",
+            "description": "On/Off ebusd message",
+            "name": "Switch",
+            "commands": ["set_level_bin"],
+            "sensors": ["level_bin"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
+        },"ebusd.number": {
+            "id": "ebusd.number",
+            "description": "Numeric ebusd message",
+            "name": "Number",
+            "commands": ["set_level_number"],
+            "sensors": ["level_number"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
+        },"ebusd.string": {
+            "id": "ebusd.string",
+            "description": "String ebusd message",
+            "name": "String",
+            "commands": ["set_level_string"],
+            "sensors": ["level_string"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
+        }
+    }
+}

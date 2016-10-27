@@ -1,0 +1,1 @@
+icon PNG format, 96*96 px, Be GPL compliant (don’t use private or non free existing icons)

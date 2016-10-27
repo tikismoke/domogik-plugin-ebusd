@@ -1,0 +1,71 @@
+.. _index:
+
+===================
+Plugin ebusd
+===================
+
+Purpose
+=======
+
+.. raw:: html
+
+   <br />
+   <hr>
+
+Dependencies
+============
+
+.. raw:: html
+
+   <br />
+   <hr>
+
+Plugin configuration
+====================
+
+.. raw:: html
+
+   <br />
+   <hr>
+
+Create the devices
+==================
+
+Device parameters configuration
+-------------------------------
+
+X parameters are needed for a domogik device creation ...
+
+
+===================== =========================== ======================================================================
+Key                   Type                        Description
+===================== =========================== ======================================================================
+key1                  datatype                    ...
+--------------------- --------------------------- ----------------------------------------------------------------------
+key2                  datatype                    ...
+===================== =========================== ======================================================================
+
+
+.. raw:: html
+
+   <br />
+   <hr>
+
+Start the plugin
+================
+
+You can now start the plugin (start button) and use the created devices.
+
+.. raw:: html
+
+   <br />
+   <hr>
+
+Set up your widgets on the user interface
+=========================================
+
+You can now place the widgets of your devices features on the user interface.
+
+.. raw:: html
+
+   <br />
