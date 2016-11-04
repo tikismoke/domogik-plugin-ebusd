@@ -1,0 +1,42 @@
+{% extends theme("base/base.html") %}
+{% import theme("base/wtf.html") as wtf %}
+
+{% block content %}
+{% include theme("client_menu.html") %}
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>{% trans %}List of available sensor find by ebus {% endtrans %}</h4></div>
+        <div class="panel-body">
+            <table class='table'>
+                <thead>
+                <tr>
+                    <th>{% trans %}Sensor_name (Clic to create device){% endtrans %}</th>
+                    <th>{% trans %}Sensor value{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ebusd in sensor_list %}
+                <tr>
+                    <td>
+                        <a href="/client/{{ clientid }}/dmg_devices/new/type/ebusd.number?name={{ ebusd.name }}&address={{ ebusd.name }}">{{
+                            ebusd.name }}</a></td>
+                    <td>{{ ebusd.value }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>{% trans %}Last errors in plugin log{% endtrans %}</h4></div>
+        <div class="panel-body">
+            <pre>{{ errorlog }}</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
