@@ -1,0 +1,38 @@
+# This file is used for automated tests with Travis CI : travis-ci.org
+# based on the template version 1
+# the templates are availables in the documentation on http://docs.domogik.org/domogik/dev/en/package_development/plugins/tests/travis_templates.html
+# sudo: false
+language: python
+python:
+  - "2.7"
+mysql:
+  adapter: mysql2
+  database: domogik
+  username: travis
+  encoding: utf8
+env:
+  DMG_BRANCH=develop
+  DMG_PLUGIN=ebusd
+install:
+  - cd ~
+  - git clone https://github.com/domogik/domogik.git
+  - cd domogik
+  - git checkout $DMG_BRANCH
+  - ~/domogik/src/domogik/tests/travis/travis-install-dependencies.sh
+before_script:
+  - ~/domogik/src/domogik/tests/travis/travis-setup-database.sh
+  - ~/domogik/src/domogik/tests/travis/travis-install-domogik-mq.sh
+  - ~/domogik/src/domogik/tests/travis/travis-install-domogik.sh
+  - ~/domogik/src/domogik/tests/travis/travis-install-plugin.sh 
+  - sudo ~/domogik/src/domogik/tests/travis/travis-start-domogik.sh
+script:
+  - echo $TRAVIS_BUILD_DIR
+  - cd $TRAVIS_BUILD_DIR
+  - export PYTHONPATH=/var/lib/domogik
+  - dmg_testrunner -a /var/lib/domogik/domogik_packages/plugin_$DMG_PLUGIN/tests/
+after_script:
+  - ~/domogik/src/domogik/tests/travis/travis-after.sh
+notifications:
+  irc: "irc.freenode.net#domogik"
+  on_success: never
+on_failure: never
