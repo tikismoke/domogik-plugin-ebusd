@@ -43,6 +43,7 @@ import datetime
 import calendar
 import socket
 
+
 class ebusdException(Exception):
     """
     ebusd exception
@@ -68,7 +69,7 @@ class ebusdclass:
             Create an ebusd instance, allowing to listen the bus
             """
             self._log = log
-            self.device= device
+            self.device = device
             self._sensors = []
 
         except ValueError:
@@ -84,12 +85,11 @@ class ebusdclass:
             addr = device.split(':')
             addr = (addr[0], int(addr[1]))
             self._dev = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self._dev.connect( addr )
+            self._dev.connect(addr)
             self._log.info("EBUS opened")
         except:
             error = "Error while opening Ebus : %s. Check if it is the good device address." % device
             raise ebusdException(error)
-
 
     # -------------------------------------------------------------------------------------------------
     def add_sensor(self, device_id, device_name, device_type, sensor_address):
@@ -98,7 +98,7 @@ class ebusdclass:
         """
         self._sensors.append({'device_id': device_id, 'device_name': device_name, 'device_type': device_type,
                               'sensor_address': sensor_address})
-        self._log.debug("add_sensor for ="+sensor_address)
+        self._log.debug("add_sensor for =" + sensor_address)
 
     # -------------------------------------------------------------------------------------------------
     def loop_sensor(self, data, send_sensor):
@@ -106,41 +106,40 @@ class ebusdclass:
         look up for a sensor when data comes from the bus.
         """
         try:
-	    self._log.debug(data)
-	    temp_data = data.split ('=')
-            data_name=temp_data[0]
-            data_value=temp_data[1]
-	    data_name=data_name[:-1]
-	    data_value=data_value[1:]
-	    for sensor in self._sensors:
-		if sensor['sensor_address'] == data_name:
-		    sensor_name = ""
+            self._log.debug(data)
+            temp_data = data.split('=')
+            data_name = temp_data[0]
+            data_value = temp_data[1]
+            data_name = data_name[:-1]
+            data_value = data_value[1:]
+            for sensor in self._sensors:
+                if sensor['sensor_address'] == data_name:
+                    sensor_name = ""
                     if sensor['device_type'] == "ebusd.string":
-	                sensor_name = "level_string"
-    	            elif sensor['device_type'] == "ebusd.number":
-        	        sensor_name = "level_number"
-            	    elif sensor['device_type'] == "ebusd.onoff":
-			sensor_name = "level_bin"
-		    if sensor_name != "":
-			send_sensor(sensor['device_id'], sensor_name, data_value)
-	except:
+                        sensor_name = "level_string"
+                    elif sensor['device_type'] == "ebusd.number":
+                        sensor_name = "level_number"
+                    elif sensor['device_type'] == "ebusd.onoff":
+                        sensor_name = "level_bin"
+                    if sensor_name != "":
+                        send_sensor(sensor['device_id'], sensor_name, data_value)
+        except:
             self._log.error("Error with loop_sensor for data=" + data)
 
-
     # -------------------------------------------------------------------------------------------------
-    def read_bus_for_sensor(self, send, send_sensor, stop):
+    def read_bus_for_sensor(self, send_sensor, stop):
         """
         """
         while not stop.isSet():
             try:
                 self._log.debug("sending find to remote  host")
-                self._dev.send( "find\n" )
+                self._dev.send("find\n")
                 data = self._dev.recv(8192)
                 for str in data.splitlines():
                     self.loop_sensor(str, send_sensor)
                 self._log.error("connection closed by remote host")
                 self._log.debug("sending listen to remote  host")
-                self._dev.send( "listen\n" )
+                self._dev.send("listen\n")
                 while 1:
                     data = self._dev.recv(4096)
                     for str in data.splitlines():
@@ -148,4 +147,4 @@ class ebusdclass:
                 self._log.error("connection closed by remote host")
             except:
                 self._log.error(u"# Read bus for sensor EXCEPTION")
-		pass
+                pass
