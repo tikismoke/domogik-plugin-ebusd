@@ -111,7 +111,7 @@
             "id": "ebusd.onoff",
             "description": "On/Off ebusd message",
             "name": "Switch",
-            "commands": ["set_level_bin"],
+            "commands": [],
             "sensors": ["level_bin"],
             "parameters": [
                 {
@@ -125,7 +125,7 @@
             "id": "ebusd.number",
             "description": "Numeric ebusd message",
             "name": "Number",
-            "commands": ["set_level_number"],
+            "commands": [],
             "sensors": ["level_number"],
             "parameters": [
                 {
@@ -139,7 +139,7 @@
             "id": "ebusd.string",
             "description": "String ebusd message",
             "name": "String",
-            "commands": ["set_level_string"],
+            "commands": [],
             "sensors": ["level_string"],
             "parameters": [
                 {
