@@ -58,6 +58,7 @@ def list_sensors(device):
             data_json.append({"name": data_name, "value": data_value})
         return data_json
     except:
+        return ""
         flash(gettext(u"Error while opening ebusd socket, check your configuration"), "error")
 
 def get_info_from_log(cmd):
