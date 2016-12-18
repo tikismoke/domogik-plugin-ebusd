@@ -35,6 +35,7 @@ from domogik.admin.application import app
 from domogikmq.pubsub.publisher import MQPub
 import zmq
 
+
 ### package specific functions
 
 def list_sensors(device):
@@ -46,21 +47,22 @@ def list_sensors(device):
         addr = device.split(':')
         addr = (addr[0], int(addr[1]))
         dev = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        dev.connect( addr )
-        dev.send( "find -d -r \n" )
+        dev.connect(addr)
+        dev.send("find -d -r \n")
         data = dev.recv(8192)
         for str in data.splitlines():
             if str:
-                temp_data = str.split ('=')
-                data_name=temp_data[0]
-                data_value=temp_data[1]
-                data_name=data_name[:-1]
-                data_value=data_value[1:]
+                temp_data = str.split('=')
+                data_name = temp_data[0]
+                data_value = temp_data[1]
+                data_name = data_name[:-1]
+                data_value = data_value[1:]
                 data_json.append({"name": data_name, "value": data_value})
     except:
-        data_json= ""
+        data_json = ""
         flash(gettext(u"Error while opening ebusd socket, check your configuration"), "error")
     return data_json
+
 
 def get_info_from_log(cmd):
     print("Command = %s" % cmd)
@@ -71,7 +73,6 @@ def get_info_from_log(cmd):
     return output
 
 
-
 ### common tasks
 package = "plugin_ebusd"
 template_dir = "{0}/{1}/admin/templates".format(get_packages_directory(), package)
@@ -79,8 +80,8 @@ static_dir = "{0}/{1}/admin/static".format(get_packages_directory(), package)
 geterrorlogcmd = "{0}/{1}/admin/geterrorlog.sh".format(get_packages_directory(), package)
 
 plugin_ebusd_adm = Blueprint(package, __name__,
-                                 template_folder=template_dir,
-                                 static_folder=static_dir)
+                             template_folder=template_dir,
+                             static_folder=static_dir)
 
 
 @plugin_ebusd_adm.route('/<client_id>', methods=['GET'])
