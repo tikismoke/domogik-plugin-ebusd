@@ -50,16 +50,17 @@ def list_sensors(device):
         dev.send( "find -d -r \n" )
         data = dev.recv(8192)
         for str in data.splitlines():
-            temp_data = str.split ('=')
-            data_name=temp_data[0]
-            data_value=temp_data[1]
-            data_name=data_name[:-1]
-            data_value=data_value[1:]
-            data_json.append({"name": data_name, "value": data_value})
-        return data_json
+            if str:
+                temp_data = str.split ('=')
+                data_name=temp_data[0]
+                data_value=temp_data[1]
+                data_name=data_name[:-1]
+                data_value=data_value[1:]
+                data_json.append({"name": data_name, "value": data_value})
     except:
-        return ""
+        data_json= ""
         flash(gettext(u"Error while opening ebusd socket, check your configuration"), "error")
+    return data_json
 
 def get_info_from_log(cmd):
     print("Command = %s" % cmd)
