@@ -109,7 +109,6 @@ class ebusdManager(Plugin):
                
             sensor_address = self.get_parameter(a_device, "address")
             self.log.info(u"==> Device '{0}' (id:{1}/{2}), name = {3}".format(device_name, device_id, device_type, sensor_address))
-            #self.ebusdclass.ebusdevices.append({'device_id': device_id, 'device_name': device_name, 'device_type': device_type, 'sensor_address': sensor_address})  
             self.ebusdclass.ebusdevices.update({device_id: {'device_name': device_name, 'device_type': device_type, 'sensor_address': sensor_address}})  
 
 

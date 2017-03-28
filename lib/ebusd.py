@@ -73,7 +73,6 @@ class ebusdclass:
         self.stop = stop
         self.leave = leave
         
-        #self.ebusdevices = []
         self.ebusdevices = {}
 
 
@@ -105,8 +104,7 @@ class ebusdclass:
             self.ebusctldev.send("find\n")
             data = self.ebusctldev.recv(8192)
         except socket.error, e:
-            error = "### Error socket for 'find' command: '%s', Quitt program  !" % e
-            raise ebusdException(error)
+            self.log.error("### Error socket for 'find' command: '%s'" % e)
 
         if data:
             for findline in data.splitlines():
