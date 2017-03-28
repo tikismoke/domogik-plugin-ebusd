@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.2
+===
+
+* Detect String/Number to select right device creation in advanced page
+* Auto reload device list when creating a new one
+
+
 0.1
 ===
 

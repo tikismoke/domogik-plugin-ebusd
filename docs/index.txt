@@ -7,6 +7,4 @@ Table Of Content
 .. toctree::
 
     /ebusd
-    /dev
-    /tests
     /changelog

@@ -7,26 +7,22 @@ Plugin ebusd
 Purpose
 =======
 
-.. raw:: html
+This plugin is used to exchange value between ebusd and domogik.
 
-   <br />
-   <hr>
+Ebusd used the ebus protocol used in somes boiler manufacturer like Saunier Duval, Vaillant, Chaffoteau, etc...
+
+To have more information look at Jhon30 ebusd github: https://github.com/john30/ebusd/
+
 
 Dependencies
 ============
 
-.. raw:: html
-
-   <br />
-   <hr>
+You need to make ebusd works and available on TCP
 
 Plugin configuration
 ====================
 
-.. raw:: html
-
-   <br />
-   <hr>
+Just type you ebusd host:port to connect to it.
 
 Create the devices
 ==================
@@ -34,38 +30,20 @@ Create the devices
 Device parameters configuration
 -------------------------------
 
-X parameters are needed for a domogik device creation ...
+1 parameter is need for a domogik device creation ...
 
 
 ===================== =========================== ======================================================================
 Key                   Type                        Description
 ===================== =========================== ======================================================================
-key1                  datatype                    ...
---------------------- --------------------------- ----------------------------------------------------------------------
-key2                  datatype                    ...
+address               String                      The topic/adress  name of the poll sensor 
 ===================== =========================== ======================================================================
 
 
-.. raw:: html
-
-   <br />
-   <hr>
 
 Start the plugin
 ================
 
 You can now start the plugin (start button) and use the created devices.
 
-.. raw:: html
-
-   <br />
-   <hr>
-
-Set up your widgets on the user interface
-=========================================
-
-You can now place the widgets of your devices features on the user interface.
-
-.. raw:: html
-
-   <br />
+Also use the advanced page to find error log, and discover device available in ebusd. You canc lic on his name to directly create the device.
