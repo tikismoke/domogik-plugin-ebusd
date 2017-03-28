@@ -50,17 +50,21 @@ def list_sensors(device):
         dev.connect(addr)
         dev.send("find -d -r \n")
         data = dev.recv(8192)
-        for str in data.splitlines():
-            if str:
-                temp_data = str.split('=')
-                data_name = temp_data[0]
-                data_value = temp_data[1]
-                data_name = data_name[:-1]
-                data_value = data_value[1:]
-                data_json.append({"name": data_name, "value": data_value})
     except:
-        data_json = ""
         flash(gettext(u"Error while opening ebusd socket, check your configuration"), "error")
+        return ""
+    for line in data.splitlines():
+        if line:
+            ebussensor_name = line.split("=")[0].strip()
+            ebussensor_value = line.split("=")[1].strip()          
+            if is_number(ebussensor_value): 
+                device_type = "ebusd.value"
+            elif ebussensor_value.lower() in ['on', 'off']:
+                device_type = "ebusd.state"
+            else:
+                device_type = "ebusd.info"
+                
+            data_json.append({"name": ebussensor_name, "value": ebussensor_value, "type": device_type})
     return data_json
 
 
@@ -72,6 +76,16 @@ def get_info_from_log(cmd):
         output = unicode(output, 'utf-8')
     return output
 
+def is_number(s):
+    ''' Return 'True' if s is a number
+    '''
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    except TypeError:
+        return False
 
 ### common tasks
 package = "plugin_ebusd"

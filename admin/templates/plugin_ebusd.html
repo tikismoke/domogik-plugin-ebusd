@@ -19,7 +19,7 @@
                 {% for ebusd in sensor_list %}
                 <tr>
                     <td>
-                        <a href="/client/{{ clientid }}/dmg_devices/new/type/ebusd.number?name={{ ebusd.name }}&address={{ ebusd.name }}">{{
+                        <a href="/client/{{ clientid }}/dmg_devices/new/type/{{ ebusd.type }}?name={{ ebusd.name }}&address={{ ebusd.name }}">{{
                             ebusd.name }}</a></td>
                     <td>{{ ebusd.value }}</td>
                 </tr>

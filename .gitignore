@@ -3,4 +3,9 @@
 _build_doc
 *~
 *.20*
-
+*.kate-swp
+*.[oa]
+*.20*
+*.orig
+*.directory
+local

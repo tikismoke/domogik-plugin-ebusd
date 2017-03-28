@@ -1,6 +1,7 @@
 {
     "json_version": 2,
     "products" : [],
+    
     "identity": {
         "author": "tikismoke",
         "author_email": "new.domodroid@gmail.com",
@@ -11,59 +12,72 @@
         "domogik_min_version": "0.5.0",
         "name": "ebusd",
         "type": "plugin",
-        "version": "0.2",
+        "version": "0.20170328",
         "tags": ["ebus", "hvac", "temperature", "heating"]
     },
+    
     "configuration": [
         {
             "default": "localhost:8888",
             "description": "ebusd ip:port socket address",
-            "key": "device",
+            "key": "ebusctldevice",
             "name": "Device",
             "required": "yes",
             "type": "string"
         }
-
     ],
-    "commands": {
-       "set_level_bin": {
-           "name": "Switch On or Off",
-           "return_confirmation": true,
-           "parameters": [
-               {
-                   "key": "level",
-                   "data_type": "DT_Switch",
-                   "conversion": ""
-               }
-           ]
+    
+    "device_types": {
+        "ebusd.state": {
+            "id": "ebusd.state",
+            "description": "On/Off ebusd message",
+            "name": "ebusd State",
+            "commands": [],
+            "sensors": ["state"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
         },
-        "set_level_number": {
-           "name": "Set to a level",
-           "return_confirmation": true,
-           "parameters": [
-               {
-                   "key": "level",
-                   "data_type": "DT_Number",
-                   "conversion": ""
-               }
-           ]
+        "ebusd.value": {
+            "id": "ebusd.value",
+            "description": "Numeric ebusd message",
+            "name": "ebusd Value",
+            "commands": [],
+            "sensors": ["value"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
         },
-        "set_level_string": {
-           "name": "Set to a level",
-           "return_confirmation": true,
-           "parameters": [
-               {
-                   "key": "level",
-                   "data_type": "DT_String",
-                   "conversion": ""
-               }
-           ]
+        "ebusd.info": {
+            "id": "ebusd.string",
+            "description": "String ebusd message",
+            "name": "ebusd Info",
+            "commands": [],
+            "sensors": ["info"],
+            "parameters": [
+                {
+                    "key": "address",
+                    "xpl": false,
+                    "description": "The target address",
+                    "type": "string"
+                }
+            ]
         }
     },
-    "xpl_commands": {},
+    
     "sensors": {
-        "level_bin": {
-            "name": "level sensor",
+        "state": {
+            "name": "State",
             "data_type": "DT_Switch",
             "conversion": "",
             "incremental": false,
@@ -76,8 +90,8 @@
                 "round_value": 0
             }
         },
-        "level_number": {
-            "name": "level sensor",
+        "value": {
+            "name": "Value",
             "data_type": "DT_Number",
             "conversion": "",
             "incremental": false,
@@ -90,8 +104,8 @@
                 "round_value": 0
             }
         },
-        "level_string": {
-            "name": "level sensor",
+        "info": {
+            "name": "Info",
             "data_type": "DT_String",
             "conversion": "",
             "incremental": false,
@@ -105,50 +119,43 @@
             }
         }
     },
-    "xpl_stats": {},
-    "device_types": {
-        "ebusd.onoff": {
-            "id": "ebusd.onoff",
-            "description": "On/Off ebusd message",
-            "name": "Switch",
-            "commands": [],
-            "sensors": ["level_bin"],
-            "parameters": [
-                {
-                    "key": "address",
-                    "xpl": false,
-                    "description": "The target address",
-                    "type": "string"
-                }
-            ]
-        },"ebusd.number": {
-            "id": "ebusd.number",
-            "description": "Numeric ebusd message",
-            "name": "Number",
-            "commands": [],
-            "sensors": ["level_number"],
-            "parameters": [
-                {
-                    "key": "address",
-                    "xpl": false,
-                    "description": "The target address",
-                    "type": "string"
-                }
-            ]
-        },"ebusd.string": {
-            "id": "ebusd.string",
-            "description": "String ebusd message",
-            "name": "String",
-            "commands": [],
-            "sensors": ["level_string"],
-            "parameters": [
-                {
-                    "key": "address",
-                    "xpl": false,
-                    "description": "The target address",
-                    "type": "string"
-                }
-            ]
+    
+    "commands": {
+       "set_state": {
+           "name": "Set State",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "value",
+                   "data_type": "DT_Switch",
+                   "conversion": ""
+               }
+           ]
+        },
+        "set_value": {
+           "name": "Set Value",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "value",
+                   "data_type": "DT_Number",
+                   "conversion": ""
+               }
+           ]
+        },
+        "set_info": {
+           "name": "Set Info",
+           "return_confirmation": true,
+           "parameters": [
+               {
+                   "key": "value",
+                   "data_type": "DT_String",
+                   "conversion": ""
+               }
+           ]
         }
-    }
+    },
+    
+    "xpl_commands": {},
+    "xpl_stats": {}
 }
