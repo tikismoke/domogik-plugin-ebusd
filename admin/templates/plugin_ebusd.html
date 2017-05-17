@@ -4,26 +4,56 @@
 {% block content %}
 {% include theme("client_menu.html") %}
 
+<script>
+function create_device(name) {
+    var name = document.getElementById("ebus_" + name).value;
+    var type = document.getElementById("ebus_devicetype_" + name).value;
+    devicecreateurl="/client/{{ clientid }}/dmg_devices/new/type/ebusd." + type + "?address=" + name;
+    window.open(devicecreateurl, '_blank') ;
+}
+</script>
+
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading"><h4>{% trans %}List of available sensor find by ebus {% endtrans %}</h4></div>
-        <div class="panel-body">
+        <div class="panel-body">       
             <table class='table'>
                 <thead>
-                <tr>
-                    <th>{% trans %}Sensor_name (Clic to create device){% endtrans %}</th>
-                    <th>{% trans %}Sensor value{% endtrans %}</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Device type</th>
+                        <th>Create device</th>
+                    </tr>
                 </thead>
+  
                 <tbody>
-                {% for ebusd in sensor_list %}
-                <tr>
-                    <td>
-                        <a href="/client/{{ clientid }}/dmg_devices/new/type/{{ ebusd.type }}?name={{ ebusd.name }}&address={{ ebusd.name }}">{{
-                            ebusd.name }}</a></td>
-                    <td>{{ ebusd.value }}</td>
-                </tr>
-                {% endfor %}
+                    {% for ebusd in sensor_list %}
+                    <tr>
+                        <form class="form-inline">
+                        <td>
+                            <input class="form-control" id="ebus_{{ ebusd.name }}" type="text" value="{{ ebusd.name }}" readonly>
+                        </td>
+
+                        <td>
+                            <input class="form-control" id="ebus_value_{{ ebusd.name }}" type="text" value="{{ ebusd.value }}" readonly>
+                        </td>
+    
+                        <td>
+                            <select class="form-control" id="ebus_devicetype_{{ ebusd.name }}">
+                                <option>info</option>
+                                <option>value</option>
+                                <option>state</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <input type="button" class="btn btn-success" name="submit_id" id="btn_id" value="Create device" onclick="create_device('{{ ebusd.name }}')"/>
+                        </td>    
+                        </form>
+                    </tr>
+                    {% endfor %}
+
                 </tbody>
             </table>
         </div>
@@ -33,10 +63,14 @@
 
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading"><h4>{% trans %}Last errors in plugin log{% endtrans %}</h4></div>
-        <div class="panel-body">
-            <pre>{{ errorlog }}</pre>
-        </div>
+        <div class="panel-heading"><h5>{% trans %}Plugin log{% endtrans %}</h5></div>
+            <div class="panel-body">
+                <p>{{ logfile }}</p>
+                <pre>{{ errorlog }}</pre>
+                <a href="./{{ clientid }}/log" class="btn btn-info" role="button">{% trans %}Display log file{% endtrans %}</a>
+            </div>
     </div>
 </div>
+
+
 {% endblock %}

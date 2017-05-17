@@ -56,42 +56,27 @@ def list_sensors(device):
     for line in data.splitlines():
         if line:
             ebussensor_name = line.split("=")[0].strip()
-            ebussensor_value = line.split("=")[1].strip()          
-            if is_number(ebussensor_value): 
-                device_type = "ebusd.value"
-            elif ebussensor_value.lower() in ['on', 'off']:
-                device_type = "ebusd.state"
-            else:
-                device_type = "ebusd.info"
-                
-            data_json.append({"name": ebussensor_name, "value": ebussensor_value, "type": device_type})
+            ebussensor_value = line.split("=")[1].strip()                         
+            data_json.append({"name": ebussensor_name, "value": ebussensor_value, "type": ""})
     return data_json
 
 
-def get_info_from_log(cmd):
-    print("Command = %s" % cmd)
-    error_log_process = subprocess.Popen([cmd], stdout=subprocess.PIPE)
-    output = error_log_process.communicate()[0]
+def get_info_from_log(log):
+    print("Log file = %s" % log)
+    errorlog = subprocess.Popen(['/bin/egrep', 'ERROR|WARNING', log], stdout=subprocess.PIPE)
+    output = errorlog.communicate()[0]
+    if not output:
+        output = "No ERROR or WARNING"
     if isinstance(output, str):
         output = unicode(output, 'utf-8')
     return output
 
-def is_number(s):
-    ''' Return 'True' if s is a number
-    '''
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-    except TypeError:
-        return False
 
 ### common tasks
 package = "plugin_ebusd"
 template_dir = "{0}/{1}/admin/templates".format(get_packages_directory(), package)
 static_dir = "{0}/{1}/admin/static".format(get_packages_directory(), package)
-geterrorlogcmd = "{0}/{1}/admin/geterrorlog.sh".format(get_packages_directory(), package)
+logfile = "/var/log/domogik/{0}.log".format(package)
 
 plugin_ebusd_adm = Blueprint(package, __name__,
                              template_folder=template_dir,
@@ -101,9 +86,10 @@ plugin_ebusd_adm = Blueprint(package, __name__,
 @plugin_ebusd_adm.route('/<client_id>', methods=['GET'])
 def index(client_id):
     detail = get_client_detail(client_id)
-    ebusd_device = str(detail['data']['configuration'][1]['value'])
-    information = ''
-
+    try:
+        ebusd_device = str(detail['data']['configuration'][1]['value'])
+    except KeyError:
+        ebusd_device = ''
     try:
         return render_template('plugin_ebusd.html',
                                clientid=client_id,
@@ -111,8 +97,27 @@ def index(client_id):
                                mactive="clients",
                                active='advanced',
                                sensor_list=list_sensors(ebusd_device),
-                               errorlog=get_info_from_log(geterrorlogcmd),
-                               information=information)
+                               errorlog=get_info_from_log(logfile))
+    except TemplateNotFound:
+        abort(404)
+
+
+@plugin_ebusd_adm.route('/<client_id>/log')
+def log(client_id):
+    clientid = client_id
+    detail = get_client_detail(client_id)
+    with open(logfile, 'r') as contentLogFile:
+        content_log = contentLogFile.read()
+        if not content_log:
+            content_log = "Empty log file"
+    try:
+        return render_template('plugin_ebusd_log.html',
+            clientid = client_id,
+            client_detail = detail,
+            mactive="clients",
+            active = 'advanced',
+            logfile = logfile,
+            contentLog = content_log)
 
     except TemplateNotFound:
         abort(404)
