@@ -110,6 +110,8 @@ def log(client_id):
         content_log = contentLogFile.read()
         if not content_log:
             content_log = "Empty log file"
+        if isinstance(content_log, str):
+            content_log = unicode(content_log, 'utf-8')
     try:
         return render_template('plugin_ebusd_log.html',
             clientid = client_id,
