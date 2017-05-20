@@ -7,10 +7,12 @@
 <script>
 function scrollToBottom() {
    document.body.scrollTop = document.body.scrollHeight;
+   document.documentElement.scrollTop = document.body.scrollHeight;
 }
 
 function scrollToTop() {
    document.body.scrollTop = 0;
+   document.documentElement.scrollTop = 0;
 }
 
 function reloadPage() {
