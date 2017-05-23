@@ -32,15 +32,15 @@ function create_device(name) {
                     <tr>
                         <form class="form-inline">
                         <td>
-                            <input class="form-control" id="ebus_{{ ebusd.name }}" type="text" value="{{ ebusd.name }}" readonly>
+                            <input class="form-control input-sm" id="ebus_{{ ebusd.name }}" type="text" value="{{ ebusd.name }}" readonly>
                         </td>
 
                         <td>
-                            <input class="form-control" id="ebus_value_{{ ebusd.name }}" type="text" value="{{ ebusd.value }}" readonly>
+                            <input class="form-control input-sm" id="ebus_value_{{ ebusd.name }}" type="text" value="{{ ebusd.value }}" readonly>
                         </td>
     
                         <td>
-                            <select class="form-control" id="ebus_devicetype_{{ ebusd.name }}">
+                            <select class="form-control input-sm" id="ebus_devicetype_{{ ebusd.name }}">
                                 <option>info</option>
                                 <option>value</option>
                                 <option>state</option>
@@ -48,7 +48,7 @@ function create_device(name) {
                         </td>
 
                         <td>
-                            <input type="button" class="btn btn-success" name="submit_id" id="btn_id" value="Create device" onclick="create_device('{{ ebusd.name }}')"/>
+                            <input type="button" class="btn btn-success btn-sm" name="submit_id" id="btn_id" value="Create device" onclick="create_device('{{ ebusd.name }}')"/>
                         </td>    
                         </form>
                     </tr>
@@ -63,12 +63,15 @@ function create_device(name) {
 
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading"><h5>{% trans %}Plugin log{% endtrans %}</h5></div>
-            <div class="panel-body">
-                <p>{{ logfile }}</p>
-                <pre>{{ errorlog }}</pre>
+        <div class="panel-heading"><h4>{% trans %}Plugin log{% endtrans %}</h4></div>
+            <div class="panel-body">            
+                <div class="panel panel-default">
+                    <div class="panel-heading">ERROR or WARNING messages in {{ logfile }}</div>
+                    <div class="panel-body"><pre>{{ errorlog }}</pre></div>
+                </div>
                 <a href="./{{ clientid }}/log" class="btn btn-info" role="button">{% trans %}Display log file{% endtrans %}</a>
             </div>
+
     </div>
 </div>
 

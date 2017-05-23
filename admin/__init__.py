@@ -97,6 +97,7 @@ def index(client_id):
                                mactive="clients",
                                active='advanced',
                                sensor_list=list_sensors(ebusd_device),
+                               logfile = logfile,
                                errorlog=get_info_from_log(logfile))
     except TemplateNotFound:
         abort(404)

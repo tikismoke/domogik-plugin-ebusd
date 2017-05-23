@@ -12,7 +12,7 @@
         "domogik_min_version": "0.5.0",
         "name": "ebusd",
         "type": "plugin",
-        "version": "0.20170517",
+        "version": "0.4",
         "tags": ["ebus", "hvac", "temperature", "heating"]
     },
     
