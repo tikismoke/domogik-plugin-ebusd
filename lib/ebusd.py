@@ -64,7 +64,7 @@ class ebusdclass:
     """
 
     # -------------------------------------------------------------------------------------------------
-    def __init__(self, log, send, stop, leave):
+    def __init__(self, log, send, stop, leave, device):
         """
         Create an ebusd instance, allowing to listen the bus
         """
@@ -72,26 +72,31 @@ class ebusdclass:
         self.send = send
         self.stop = stop
         self.leave = leave
+        self.ebusddevice = device
         
         self.ebusdevices = {}
 
 
     # -------------------------------------------------------------------------------------------------
-    def ebusdopen(self, device):
-        """ Open (opens the device once)
-        @param device : the device string to open
+    def ebusdopen(self, reconnect):
+        """ Open ebusctl connection
         """
         try:
-            self.log.info("Try to open connexion to ebusd: '%s'" % device)
-            addr = device.split(':')
+            self.log.info("Try to open connection to ebusd: '%s'" % self.ebusddevice)
+            addr = self.ebusddevice.split(':')
             addr = (addr[0], int(addr[1]))
             self.ebusctldev = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.ebusctldev.connect(addr)
-            self.ebusctldev.settimeout(SOCKETTIMEOUT)       # Add timeout for no blocking connexion.
+            self.ebusctldev.settimeout(SOCKETTIMEOUT)       # Add timeout for no blocking connection.
             self.log.info("EBUS opened")
+            return True
         except:
-            error = "Error while opening Ebus : %s. Check if it is the good device address." % device
-            raise ebusdException(error)
+            if reconnect:
+                self.log.error("### Error reconnecting to ebus daemon, Waiting few minutes before redo !" )
+                return False
+            else:
+                error = "Error while opening Ebus : %s. Check if it is the ebus daemon address:port is ok  or daemon is running !" % self.ebusddevice
+                raise ebusdException(error)
 
 
     # -------------------------------------------------------------------------------------------------
@@ -99,48 +104,53 @@ class ebusdclass:
         """
         """
         # Request find sensors to ebusd
-        self.log.debug("==> Sending 'find' command to remote ebusd host")
-        try:
-            self.ebusctldev.send("find\n")
-            data = self.ebusctldev.recv(8192)
-        except socket.error, e:
-            self.log.error("### Error socket for 'find' command: '%s'" % e)
-
+        data = self.ebusdsendcommand("find")
         if data:
             for findline in data.splitlines():
                 self.loop_sensor(findline)
         else:
-            self.log.error("### No data received for 'find' command")
+            self.log.warning("==> No data received for 'find' command")
                     
         # Request listen sensors to ebusd
-        self.log.debug("==> Sending 'listen' command to remote ebusd host")
-        try:
-            self.ebusctldev.send("listen\n")
-        except socket.error, e:
-            self.log.error("### Error socket for 'listen' command: '%s', Quitt program  !" % e)
-            self.ebusctldev.close()
-            self.leave()
-            return
+        self.ebusdsendcommand("listen")
                 
         while not self.stop.isSet():
             try:
                 data = self.ebusctldev.recv(4096)
             except socket.error, e:
-                self.log.error("### Error read socket for 'listen' command: '%s', Quitt program  !" % e)
-                self.ebusctldev.close()
-                self.leave()
-                return
+                self.log.error("### Error read socket for 'listen' command: '%s', Waiting few minutes before reconnect !" % e)
+                self.ebusdreconnect()
 
             if data:
                 for listenline in data.splitlines():
                     self.loop_sensor(listenline)
             else:
-                self.log.error("### No data received for 'listen' command, connexion closed")
-                self.ebusctldev.close()
-                self.leave()
-                return
+                self.log.error("### No data received for 'listen', Waiting few minutes before reconnect !")
+                self.ebusdreconnect()
 
 
+    # -------------------------------------------------------------------------------------------------
+    def ebusdreconnect(self):
+        connectionok = False
+        while not connectionok and not self.stop.isSet():
+            self.ebusctldev.close()
+            self.stop.wait(300)
+            connectionok = self.ebusdopen(reconnect = True)
+        self.ebusdsendcommand("listen")
+
+        
+    # -------------------------------------------------------------------------------------------------
+    def ebusdsendcommand(self, command):
+        self.log.debug("==> Sending '%s' command to remote ebusd host" % command)
+        try:
+            self.ebusctldev.send(command + "\n")
+            data = self.ebusctldev.recv(8192)
+            return data
+        except socket.error, e:
+            self.log.error("### Error socket for '%s' command: '%s'" % (command, e))
+            return ""
+        
+        
     # -------------------------------------------------------------------------------------------------
     def loop_sensor(self, line):
         """

@@ -65,13 +65,15 @@ class ebusdManager(Plugin):
         self.sensors = self.get_sensors(self.devices)
         ###self.log.info(u"==> sensors:   %s" % format(self.sensors))
 
+        # get plugin config
+        ebusctldevice = self.get_config("ebusctldevice")    # Get config key
+
         # Open the ebus manager
-        self.ebusdclass = ebusdclass(self.log, self.send_data, self.get_stop(), self.force_leave)
+        self.ebusdclass = ebusdclass(self.log, self.send_data, self.get_stop(), self.force_leave, ebusctldevice)
 
         # Open socket connexion to ebusd
-        ebusctldevice = self.get_config("ebusctldevice")    # Get config key
         try:
-            self.ebusdclass.ebusdopen(ebusctldevice)
+            self.ebusdclass.ebusdopen(reconnect = False)
         except ebusdException as ex:
             self.log.error(ex.value)
             self.force_leave()
